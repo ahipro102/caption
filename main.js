@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const aiModelSelect = document.getElementById('aiModel');
   const contentInput = document.getElementById('content');
   const requirementsInput = document.getElementById('requirements');
+  const minCharLimitInput = document.getElementById('minCharLimit');
   const charLimitInput = document.getElementById('charLimit');
   const numCaptionsInput = document.getElementById('numCaptions');
   
@@ -179,7 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return captions.map(cap => {
       // Dùng Regex (Biểu thức chính quy) để quét và xóa SẠCH toàn bộ mọi hashtag mà AI lỡ tạo ra
-      let cleanedCap = cap.replace(/#\S+/g, '').trim();
+      let cleanedCap = cap.replace(/#\S+/g, '');
+      
+      // Xóa luôn các cụm từ đếm số lượng ký tự mà AI ngoan cố in ra (Ví dụ: "(396 ký tự)", "396 kí tự")
+      cleanedCap = cleanedCap.replace(/[\(\[]?\d+\s*k[ýí]\s*tự[\)\]]?/gi, '');
+      
+      cleanedCap = cleanedCap.trim();
       
       // Sau đó mới nối đúng một hashtag duy nhất của chúng ta vào cuối
       return cleanedCap + '\n\n#MamNonAqua';
@@ -240,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const reqs = requirementsInput.value.trim();
+    const minCharLimit = minCharLimitInput ? minCharLimitInput.value : 100;
     const charLimit = charLimitInput.value || 500;
     const numCaptions = numCaptionsInput.value || 3;
 
@@ -249,7 +256,7 @@ Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên thông 
 - Giọng văn (QUAN TRỌNG): Nhí nhảnh, dễ thương, dạt dào cảm xúc, đúng chuẩn tinh thần trẻ mầm non ngây thơ trong sáng. Phải làm cho phụ huynh đọc vào là có cảm tình và rung động ngay từ câu đầu tiên.
 - Hình thức: Viết chuẩn thuật toán SEO Facebook. Chèn các emoji thật sinh động, khéo léo.
 ${reqs ? `- Yêu cầu thêm từ bạn: "${reqs}"` : ''}
-- KẾT QUẢ ĐẦU RA TUYỆT ĐỐI KHÔNG DÀI QUÁ ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải ngầm tự đếm số lượng ký tự trước, nhưng TUYỆT ĐỐI KHÔNG in số ký tự đó ra kết quả (ví dụ: cấm in "(396 ký tự)"). Chỉ trả về nội dung caption.
+- KẾT QUẢ ĐẦU RA TUYỆT ĐỐI PHẢI DÀI TỪ ${minCharLimit} ĐẾN TỐI ĐA ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải ngầm tự đếm số lượng ký tự trước, nhưng TUYỆT ĐỐI KHÔNG in số ký tự đó ra kết quả (ví dụ: cấm in "(396 ký tự)"). Chỉ trả về nội dung caption.
 - BẮT BUỘC: CHỈ ĐƯỢC PHÉP dùng duy nhất MỘT hashtag là #MamNonAqua ở cuối mỗi caption. TUYỆT ĐỐI KHÔNG thêm bất kỳ hashtag nào khác (kể cả những cái liên quan).
 
 Dưới đây là các văn phong mẫu CHUẨN MỰC để bạn bắt chước 100% cái hồn, cách dùng từ và cách đặt emoji (đây là ví dụ bé tập câu cá, hãy áp dụng giọng văn này cho nội dung hiện tại):

@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // BẠN VẪN CÓ THỂ ĐIỀN API KEY CỨNG Ở ĐÂY NẾU MUỐN (Sẽ dùng làm dự phòng nếu giao diện để trống)
+  const GEMINI_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
+
   const apiKeyInput = document.getElementById('apiKey');
+  const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
   const contentInput = document.getElementById('content');
   const requirementsInput = document.getElementById('requirements');
   const charLimitInput = document.getElementById('charLimit');
@@ -25,10 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
     apiKeyInput.value = savedApiKey;
   }
 
-  // Save API Key on change
-  apiKeyInput.addEventListener('change', (e) => {
-    localStorage.setItem('geminiApiKey', e.target.value.trim());
-  });
+  // Save API Key on button click
+  if (saveApiKeyBtn) {
+    saveApiKeyBtn.addEventListener('click', () => {
+      const keyToSave = apiKeyInput.value.trim();
+      if (keyToSave) {
+        localStorage.setItem('geminiApiKey', keyToSave);
+        saveApiKeyBtn.textContent = 'Đã lưu!';
+        saveApiKeyBtn.style.backgroundColor = '#28a745';
+        saveApiKeyBtn.style.color = 'white';
+        setTimeout(() => {
+          saveApiKeyBtn.textContent = 'Lưu Key';
+          saveApiKeyBtn.style.backgroundColor = 'var(--secondary)';
+          saveApiKeyBtn.style.color = '#a32a13';
+        }, 2000);
+      } else {
+        alert('Vui lòng nhập Key trước khi lưu!');
+      }
+    });
+  }
 
   const callGeminiAPI = async (prompt, apiKey) => {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -117,9 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateCaptions = async () => {
-    const apiKey = apiKeyInput.value.trim();
-    if (!apiKey) {
-      alert('Vui lòng nhập Google Gemini API Key!');
+    // Lấy từ UI trước, nếu trống thì lấy từ hằng số GEMINI_API_KEY dự phòng
+    let apiKey = apiKeyInput.value.trim();
+    if (!apiKey || apiKey === "") {
+      apiKey = GEMINI_API_KEY;
+    }
+    
+    if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+      alert('Vui lòng nhập Google Gemini API Key hoặc lưu lại vào mã nguồn!');
       apiKeyInput.focus();
       return;
     }

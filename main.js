@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const apiKeyInput = document.getElementById('apiKey');
   const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+  const aiModelSelect = document.getElementById('aiModel');
   const contentInput = document.getElementById('content');
   const requirementsInput = document.getElementById('requirements');
   const charLimitInput = document.getElementById('charLimit');
@@ -74,9 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const callGeminiAPI = async (prompt, apiKey) => {
-    // Sử dụng model gemini-1.5-flash-latest hoặc gemini-pro nếu model trước bị lỗi
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+  const callGeminiAPI = async (prompt, apiKey, modelName) => {
+    // Sử dụng model được chọn từ giao diện
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
     
     const requestBody = {
       contents: [{
@@ -200,7 +201,8 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     loadingOverlay.classList.remove('hidden');
 
     try {
-      const generatedText = await callGeminiAPI(prompt, apiKey);
+      const selectedModel = aiModelSelect ? aiModelSelect.value : 'gemini-pro';
+      const generatedText = await callGeminiAPI(prompt, apiKey, selectedModel);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       
       captions.forEach((cap, index) => {

@@ -247,10 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let prompt = `Bạn là một chuyên gia về Facebook Marketing, đặc biệt là trong lĩnh vực giáo dục mầm non. Bạn đang làm việc cho trường mầm non Aqua.
 Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên thông tin sau:
 - Nội dung chính: "${content}"
-${reqs ? `- Yêu cầu thêm: "${reqs}"` : ''}
-- Giới hạn: Không dài quá ${charLimit} ký tự cho mỗi caption, viết súc tích, không giông dài.
+- Giọng văn (QUAN TRỌNG): Nhí nhảnh, dễ thương, dạt dào cảm xúc, đúng chuẩn tinh thần trẻ mầm non ngây thơ trong sáng. Phải làm cho phụ huynh đọc vào là có cảm tình và rung động ngay từ câu đầu tiên.
+- Hình thức: Viết chuẩn thuật toán SEO Facebook (câu văn dễ đọc, xuống dòng hợp lý). Chèn các emoji (biểu tượng cảm xúc) và ký tự đặc biệt thật sinh động, khéo léo và bám sát đúng với nội dung bài viết.
+${reqs ? `- Yêu cầu thêm từ bạn: "${reqs}"` : ''}
+- Giới hạn: Không dài quá ${charLimit} ký tự cho mỗi caption, viết súc tích, không lê thê.
 - BẮT BUỘC: Thêm hashtag #MamnonAqua ở cuối mỗi caption.
-Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). Chỉ trả về nội dung caption, không cần bình luận thêm.`;
+Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). Chỉ trả về nội dung caption, tuyệt đối không cần bình luận thêm.`;
 
     // UI Updates
     resultsContainer.innerHTML = '';

@@ -1,4 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // --- TÍNH NĂNG TỰ ĐỘNG ĐĂNG XUẤT SAU 15 PHÚT ---
+  let inactivityTimeout;
+  const INACTIVITY_TIME = 15 * 60 * 1000; // 15 phút tính bằng mili-giây
+
+  const logoutUser = () => {
+    sessionStorage.removeItem('isAuthenticated');
+    sessionStorage.removeItem('currentUser');
+    alert('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
+    window.location.href = 'login.html';
+  };
+
+  const resetInactivityTimer = () => {
+    clearTimeout(inactivityTimeout);
+    inactivityTimeout = setTimeout(logoutUser, INACTIVITY_TIME);
+  };
+
+  // Lắng nghe các thao tác của người dùng để làm mới bộ đếm thời gian
+  ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+    document.addEventListener(event, resetInactivityTimer);
+  });
+  
+  // Khởi chạy bộ đếm ngay khi tải trang
+  resetInactivityTimer();
+  // ----------------------------------------------
+
   // BẠN VẪN CÓ THỂ ĐIỀN API KEY CỨNG Ở ĐÂY NẾU MUỐN (Sẽ dùng làm dự phòng nếu giao diện để trống)
   const GEMINI_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
 
@@ -50,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const callGeminiAPI = async (prompt, apiKey) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // Sử dụng model gemini-1.5-flash-latest hoặc gemini-pro nếu model trước bị lỗi
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
     
     const requestBody = {
       contents: [{

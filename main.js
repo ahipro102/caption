@@ -36,10 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const numCaptionsInput = document.getElementById('numCaptions');
   
   const generateBtn = document.getElementById('generateBtn');
+  const stopBtn = document.getElementById('stopBtn');
   const regenerateBtn = document.getElementById('regenerateBtn');
   const resultsContainer = document.getElementById('resultsContainer');
   const loadingOverlay = document.getElementById('loading');
   const logoutBtn = document.getElementById('logoutBtn');
+  
+  let currentAbortController = null;
+
+  if (stopBtn) {
+    stopBtn.addEventListener('click', () => {
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+    });
+  }
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -75,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const callGeminiAPI = async (prompt, apiKey, modelName) => {
+  const callGeminiAPI = async (prompt, apiKey, modelName, signal) => {
     // Sử dụng model được chọn từ giao diện
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
     
@@ -94,7 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
+        signal: signal
       });
 
       if (!response.ok) {
@@ -198,11 +210,17 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     resultsContainer.innerHTML = '';
     generateBtn.disabled = true;
     regenerateBtn.disabled = true;
+    if (stopBtn) stopBtn.classList.remove('hidden');
     loadingOverlay.classList.remove('hidden');
+
+    if (currentAbortController) {
+      currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
 
     try {
       const selectedModel = aiModelSelect ? aiModelSelect.value : 'gemini-3.5-flash';
-      const generatedText = await callGeminiAPI(prompt, apiKey, selectedModel);
+      const generatedText = await callGeminiAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       
       captions.forEach((cap, index) => {
@@ -212,11 +230,17 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
 
       regenerateBtn.classList.remove('hidden');
     } catch (error) {
-      alert(`Đã xảy ra lỗi: ${error.message}`);
+      if (error.name === 'AbortError') {
+        alert('Đã hủy tạo Caption.');
+      } else {
+        alert(`Đã xảy ra lỗi: ${error.message}`);
+      }
     } finally {
       generateBtn.disabled = false;
       regenerateBtn.disabled = false;
+      if (stopBtn) stopBtn.classList.add('hidden');
       loadingOverlay.classList.add('hidden');
+      currentAbortController = null;
     }
   };
 

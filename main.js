@@ -258,7 +258,7 @@ Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí tại Trường Mầm non 
 Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Trường Mầm non Aqua luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸 #MamNonAqua #AquaSchool
 Mẫu 3: 🌊 Giờ chơi mà học tại Trường Mầm non Aqua: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨ #MamNonAqua #AquaSchool
 
-Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). Chỉ trả về nội dung caption, tuyệt đối không cần bình luận thêm.`;
+Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). TUYỆT ĐỐI KHÔNG có câu mở đầu (như "Dưới đây là..."), KHÔNG giải thích, KHÔNG bình luận. BẮT ĐẦU NGAY LẬP TỨC bằng "1. ".`;
 
     // UI Updates
     resultsContainer.innerHTML = '';

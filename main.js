@@ -201,7 +201,7 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     loadingOverlay.classList.remove('hidden');
 
     try {
-      const selectedModel = aiModelSelect ? aiModelSelect.value : 'gemini-pro';
+      const selectedModel = aiModelSelect ? aiModelSelect.value : 'gemini-3.5-flash';
       const generatedText = await callGeminiAPI(prompt, apiKey, selectedModel);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       

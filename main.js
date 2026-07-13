@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Load API Key from localStorage
-  const savedApiKey = localStorage.getItem('geminiApiKey');
+  const savedApiKey = localStorage.getItem('groqApiKey');
   if (savedApiKey) {
     apiKeyInput.value = savedApiKey;
   }
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveApiKeyBtn.addEventListener('click', () => {
       const keyToSave = apiKeyInput.value.trim();
       if (keyToSave) {
-        localStorage.setItem('geminiApiKey', keyToSave);
+        localStorage.setItem('groqApiKey', keyToSave);
         saveApiKeyBtn.textContent = 'Đã lưu!';
         saveApiKeyBtn.style.backgroundColor = '#28a745';
         saveApiKeyBtn.style.color = 'white';
@@ -86,17 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const callGeminiAPI = async (prompt, apiKey, modelName, signal) => {
-    // Sử dụng model được chọn từ giao diện
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+  const callGroqAPI = async (prompt, apiKey, modelName, signal) => {
+    const url = 'https://api.groq.com/openai/v1/chat/completions';
     
     const requestBody = {
-      contents: [{
-        parts: [{ text: prompt }]
+      model: modelName,
+      messages: [{
+        role: "user",
+        content: prompt
       }],
-      generationConfig: {
-        temperature: 0.7,
-      }
+      temperature: 0.7,
     };
 
     try {
@@ -104,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify(requestBody),
         signal: signal
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const data = await response.json();
-      return data.candidates[0].content.parts[0].text;
+      return data.choices[0].message.content;
     } catch (error) {
       console.error('Error:', error);
       throw error;
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-      alert('Vui lòng nhập Google Gemini API Key hoặc lưu lại vào mã nguồn!');
+      alert('Vui lòng nhập Groq API Key hoặc lưu lại vào mã nguồn!');
       apiKeyInput.focus();
       return;
     }
@@ -219,8 +219,8 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     currentAbortController = new AbortController();
 
     try {
-      const selectedModel = aiModelSelect ? aiModelSelect.value : 'gemini-3.5-flash';
-      const generatedText = await callGeminiAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
+      const selectedModel = aiModelSelect ? aiModelSelect.value : 'llama3-8b-8192';
+      const generatedText = await callGroqAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       
       captions.forEach((cap, index) => {

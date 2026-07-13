@@ -60,10 +60,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Tự động tải danh sách Model từ Groq API
+  const loadGroqModels = async (apiKey) => {
+    if (!apiKey || !aiModelSelect) return;
+    try {
+      aiModelSelect.innerHTML = '<option value="">Đang tải danh sách Model...</option>';
+      const response = await fetch('https://api.groq.com/openai/v1/models', {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        aiModelSelect.innerHTML = '';
+        
+        // Lọc bớt các model âm thanh (whisper) để lại model văn bản
+        const textModels = data.data.filter(m => !m.id.includes('whisper'));
+        textModels.sort((a, b) => a.id.localeCompare(b.id));
+
+        textModels.forEach(model => {
+          const option = document.createElement('option');
+          option.value = model.id;
+          option.textContent = model.id;
+          aiModelSelect.appendChild(option);
+        });
+
+        // Tự động chọn một model nhẹ/nhanh làm mặc định nếu có
+        const defaultModels = ['llama-3.1-8b-instant', 'llama3-8b-8192', 'gemma2-9b-it'];
+        for (const dm of defaultModels) {
+          const match = Array.from(aiModelSelect.options).find(opt => opt.value === dm);
+          if (match) {
+            match.selected = true;
+            break;
+          }
+        }
+      } else {
+        aiModelSelect.innerHTML = '<option value="">Lỗi tải Model (Key có thể sai)</option>';
+      }
+    } catch (error) {
+      aiModelSelect.innerHTML = '<option value="">Không thể tải Model</option>';
+      console.error('Failed to load models', error);
+    }
+  };
+
   // Load API Key from localStorage
   const savedApiKey = localStorage.getItem('groqApiKey');
   if (savedApiKey) {
     apiKeyInput.value = savedApiKey;
+    loadGroqModels(savedApiKey); // Tải model ngay khi trang khởi động nếu đã lưu key
   }
 
   // Save API Key on button click
@@ -75,6 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
         saveApiKeyBtn.textContent = 'Đã lưu!';
         saveApiKeyBtn.style.backgroundColor = '#28a745';
         saveApiKeyBtn.style.color = 'white';
+        
+        // Tải danh sách model ngay khi người dùng lưu key thành công
+        loadGroqModels(keyToSave);
+
         setTimeout(() => {
           saveApiKeyBtn.textContent = 'Lưu Key';
           saveApiKeyBtn.style.backgroundColor = 'var(--secondary)';
@@ -219,7 +265,13 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     currentAbortController = new AbortController();
 
     try {
-      const selectedModel = aiModelSelect ? aiModelSelect.value : 'llama3-8b-8192';
+      const selectedModel = aiModelSelect ? aiModelSelect.value : 'llama-3.1-8b-instant';
+      
+      if (!selectedModel) {
+        alert('Danh sách Model chưa được tải hoặc không hợp lệ. Vui lòng kiểm tra lại API Key!');
+        throw new Error('Chưa chọn Model');
+      }
+
       const generatedText = await callGroqAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       

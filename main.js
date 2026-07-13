@@ -248,10 +248,16 @@ document.addEventListener('DOMContentLoaded', () => {
 Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên thông tin sau:
 - Nội dung chính: "${content}"
 - Giọng văn (QUAN TRỌNG): Nhí nhảnh, dễ thương, dạt dào cảm xúc, đúng chuẩn tinh thần trẻ mầm non ngây thơ trong sáng. Phải làm cho phụ huynh đọc vào là có cảm tình và rung động ngay từ câu đầu tiên.
-- Hình thức: Viết chuẩn thuật toán SEO Facebook (câu văn dễ đọc, xuống dòng hợp lý). Chèn các emoji (biểu tượng cảm xúc) và ký tự đặc biệt thật sinh động, khéo léo và bám sát đúng với nội dung bài viết.
+- Hình thức: Viết chuẩn thuật toán SEO Facebook. Chèn các emoji thật sinh động, khéo léo.
 ${reqs ? `- Yêu cầu thêm từ bạn: "${reqs}"` : ''}
-- Giới hạn: Không dài quá ${charLimit} ký tự cho mỗi caption, viết súc tích, không lê thê.
-- BẮT BUỘC: Thêm hashtag #MamnonAqua ở cuối mỗi caption.
+- KẾT QUẢ ĐẦU RA TUYỆT ĐỐI KHÔNG DÀI QUÁ ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải tự đếm chính xác số lượng ký tự trước khi trả lời. Đừng viết quá dài.
+- BẮT BUỘC: Thêm hashtag #MamnonAqua và các hashtag liên quan ở cuối.
+
+Dưới đây là các văn phong mẫu CHUẨN MỰC để bạn bắt chước 100% cái hồn, cách dùng từ và cách đặt emoji (đây là ví dụ bé tập câu cá, hãy áp dụng giọng văn này cho nội dung hiện tại):
+Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí tại Trường Mầm non Aqua say sưa trổ tài câu cá! Qua trò chơi này, các con không chỉ rèn luyện sự khéo léo, kiên nhẫn mà còn học được cách tập trung cao độ. Yêu lắm những đôi tay nhỏ xíu này! ❤️🐟 #MamNonAqua #AquaSchool
+Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Trường Mầm non Aqua luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸 #MamNonAqua #AquaSchool
+Mẫu 3: 🌊 Giờ chơi mà học tại Trường Mầm non Aqua: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨ #MamNonAqua #AquaSchool
+
 Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). Chỉ trả về nội dung caption, tuyệt đối không cần bình luận thêm.`;
 
     // UI Updates

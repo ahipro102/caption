@@ -29,9 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const GEMINI_API_KEY = "AIzaSyCOx105Evj6-RHy0iw_SmH4g880MtjyeeE";
 
   const contentInput = document.getElementById('content');
-  const requirementsInput = document.getElementById('requirements');
-  const minCharLimitInput = document.getElementById('minCharLimit');
-  const charLimitInput = document.getElementById('charLimit');
   const numCaptionsInput = document.getElementById('numCaptions');
   
   const generateBtn = document.getElementById('generateBtn');
@@ -204,24 +201,24 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const reqs = requirementsInput.value.trim();
-    const minCharLimit = minCharLimitInput ? minCharLimitInput.value : 100;
-    const charLimit = charLimitInput.value || 500;
-    const numCaptions = numCaptionsInput.value || 3;
+    const minCharLimit = 200;
+    const charLimit = 500;
+    const numCaptions = numCaptionsInput.value || 5;
 
-    let prompt = `Bạn là một chuyên gia về Facebook Marketing, đặc biệt là trong lĩnh vực giáo dục mầm non. Bạn đang làm việc cho trường mầm non Aqua.
-Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên thông tin sau:
-- Nội dung chính: "${content}"
-- Giọng văn (QUAN TRỌNG): Nhí nhảnh, dễ thương, dạt dào cảm xúc, đúng chuẩn tinh thần trẻ mầm non ngây thơ trong sáng. Phải làm cho phụ huynh đọc vào là có cảm tình và rung động ngay từ câu đầu tiên.
-- Hình thức: Viết chuẩn thuật toán SEO Facebook. Chèn các emoji thật sinh động, khéo léo.
-${reqs ? `- Yêu cầu thêm từ bạn: "${reqs}"` : ''}
-- KẾT QUẢ ĐẦU RA TUYỆT ĐỐI PHẢI DÀI TỪ ${minCharLimit} ĐẾN TỐI ĐA ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải ngầm tự đếm số lượng ký tự trước, nhưng TUYỆT ĐỐI KHÔNG in số ký tự đó ra kết quả (ví dụ: cấm in "(396 ký tự)"). Chỉ trả về nội dung caption.
-- BẮT BUỘC: CHỈ ĐƯỢC PHÉP dùng duy nhất MỘT hashtag là #MamNonAqua ở cuối mỗi caption. TUYỆT ĐỐI KHÔNG thêm bất kỳ hashtag nào khác (kể cả những cái liên quan).
+    let prompt = `Bạn là một giáo viên mầm non đang viết bài lên Facebook để chia sẻ những khoảnh khắc đáng yêu của các bé.
+Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên nội dung sau: "${content}"
 
-Dưới đây là các văn phong mẫu CHUẨN MỰC để bạn bắt chước 100% cái hồn, cách dùng từ và cách đặt emoji (đây là ví dụ bé tập câu cá, hãy áp dụng giọng văn này cho nội dung hiện tại):
-Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí tại Trường Mầm non Aqua say sưa trổ tài câu cá! Qua trò chơi này, các con không chỉ rèn luyện sự khéo léo, kiên nhẫn mà còn học được cách tập trung cao độ. Yêu lắm những đôi tay nhỏ xíu này! ❤️🐟 #MamNonAqua
-Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Trường Mầm non Aqua luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸 #MamNonAqua
-Mẫu 3: 🌊 Giờ chơi mà học tại Trường Mầm non Aqua: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨ #MamNonAqua
+YÊU CẦU QUAN TRỌNG VỀ GIỌNG VĂN:
+- Tự nhiên, gần gũi, dạt dào cảm xúc như một lời tâm tình của cô giáo mầm non. Đọc vào là thấy rung động và yêu thương.
+- TUYỆT ĐỐI KHÔNG nhắc đến tên trường (không được viết cụm từ "Trường Mầm non Aqua" hay "Aqua" vào trong câu văn), vì tên trường đã nằm sẵn trong hashtag ở cuối bài rồi. Việc lặp lại tên trường sẽ làm câu văn mất đi sự tự nhiên và sặc mùi quảng cáo.
+- Hình thức: Chèn các emoji sinh động, khéo léo, đúng chỗ. 
+- KẾT QUẢ ĐẦU RA TUYỆT ĐỐI PHẢI DÀI TỪ ${minCharLimit} ĐẾN TỐI ĐA ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải ngầm tự đếm số lượng ký tự trước, nhưng TUYỆT ĐỐI KHÔNG in số ký tự đó ra kết quả (ví dụ: cấm in "(396 ký tự)").
+- BẮT BUỘC: CHỈ ĐƯỢC PHÉP dùng duy nhất MỘT hashtag là #MamNonAqua ở cuối mỗi caption. TUYỆT ĐỐI KHÔNG thêm hashtag nào khác.
+
+Dưới đây là các văn phong mẫu CHUẨN MỰC để bạn bắt chước 100% cái hồn (đây là ví dụ bé tập câu cá, hãy áp dụng giọng văn này cho nội dung hiện tại):
+Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí say sưa trổ tài câu cá! Qua trò chơi này, các con không chỉ rèn luyện sự khéo léo, kiên nhẫn mà còn học được cách tập trung cao độ. Yêu lắm những đôi tay nhỏ xíu này! ❤️🐟 #MamNonAqua
+Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Đây luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸 #MamNonAqua
+Mẫu 3: 🌊 Giờ chơi mà học: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨ #MamNonAqua
 
 Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). TUYỆT ĐỐI KHÔNG có câu mở đầu (như "Dưới đây là..."), KHÔNG giải thích, KHÔNG bình luận. BẮT ĐẦU NGAY LẬP TỨC bằng "1. ".`;
 

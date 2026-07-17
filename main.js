@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content: prompt
       }],
       temperature: 0.7,
-      max_tokens: 1024 // Giới hạn token để tiết kiệm chi phí
+      max_tokens: 3000 // Tăng giới hạn để AI có thể viết đủ số lượng bài khi user yêu cầu nhiều
     };
 
     try {
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1024 // Giới hạn token để tiết kiệm chi phí
+        maxOutputTokens: 3000 // Tăng giới hạn để AI có đủ không gian viết
       }
     };
 
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const numCaptions = numCaptionsInput.value || 5;
 
     let prompt = `Bạn là một giáo viên mầm non đang viết bài lên Facebook để chia sẻ những khoảnh khắc đáng yêu của các bé.
-Hãy viết ${numCaptions} mẫu caption Facebook khác nhau dựa trên nội dung sau: "${content}"
+YÊU CẦU BẮT BUỘC: Hãy viết CHÍNH XÁC ${numCaptions} mẫu caption Facebook khác nhau dựa trên nội dung sau: "${content}". (Bạn phải đếm và tạo cho đủ đúng ${numCaptions} mẫu, không được thiếu).
 
 YÊU CẦU QUAN TRỌNG VỀ GIỌNG VĂN:
 - Tự nhiên, gần gũi, dạt dào cảm xúc như một lời tâm tình của cô giáo mầm non. Đọc vào là thấy rung động và yêu thương.

@@ -28,30 +28,6 @@
     </header>
 
     <main class="app-content">
-      <section class="settings-panel">
-        <div class="input-row" style="margin-bottom: 0; gap: 1.5rem;">
-          <div class="input-group" style="margin-bottom: 0; flex: 2; display: none;">
-            <label for="apiKey">
-              <i class="fa-solid fa-key"></i> Groq API Key
-            </label>
-            <div style="display: flex; gap: 10px;">
-               <input type="password" id="apiKey" placeholder="Nhập API Key của bạn..." style="flex: 1;">
-              <button id="saveApiKeyBtn" class="btn btn-secondary" style="flex: none; padding: 0 1.5rem;">Lưu Key</button>
-            </div>
-            <small style="color: var(--text-light); margin-top: 5px;">(Đã được tích hợp ngầm trong mã nguồn)</small>
-          </div>
-          
-          <div class="input-group" style="margin-bottom: 0; flex: 1;">
-            <label for="aiModel">
-              <i class="fa-solid fa-microchip"></i> Chọn Phiên Bản AI
-            </label>
-            <select id="aiModel" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 1rem; background-color: white;">
-              <option value="">Đang tải danh sách Model...</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
       <section class="main-form">
         <div class="input-group full-width">
           <label for="content"><i class="fa-solid fa-pen"></i> Nội dung bài viết / Chủ đề *</label>

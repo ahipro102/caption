@@ -27,6 +27,23 @@ body {
   line-height: 1.6;
 }
 
+/* Lớp phủ làm mờ toàn bộ ảnh nền */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  z-index: -1;
+  background-image: url('nenmaytinh.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(4px); /* Tăng giảm con số này để chỉnh độ mờ (ví dụ: 12px sẽ mờ hơn) */
+  transform: scale(1.05); /* Phóng to nhẹ 5% để che phần viền trắng bị lẹm do hiệu ứng mờ */
+}
+
 .app-container {
   max-width: 800px;
   margin: 2rem auto;
@@ -56,11 +73,14 @@ body {
 }
 
 .settings-panel, .main-form {
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.85); /* Lớp nền trắng trong suốt 85% */
+  backdrop-filter: blur(12px); /* Hiệu ứng kính mờ */
+  -webkit-backdrop-filter: blur(12px); /* Hỗ trợ Safari */
   padding: 1.5rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Đường viền nhẹ tạo cảm giác nổi */
 }
 
 .input-row {
@@ -162,12 +182,17 @@ body {
 }
 
 .caption-card {
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.85); /* Lớp nền trắng trong suốt 85% */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   position: relative;
   border-left: 4px solid var(--primary);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   animation: slideIn 0.3s ease forwards;
 }
 
@@ -231,4 +256,61 @@ body {
 .tooltip {
   cursor: help;
   color: var(--primary);
+}
+
+/* --- RESPONSIVE DESIGN (Tối ưu cho Điện thoại) --- */
+@media screen and (max-width: 768px) {
+  body::before {
+    background-image: url('nendienthoai.jpg'); /* Hình nền dành riêng cho Điện thoại */
+  }
+
+  .app-container {
+    margin: 1rem auto;
+    padding: 0 0.75rem;
+  }
+
+  .app-header .logo {
+    font-size: 2.2rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .app-header p {
+    font-size: 0.9rem;
+  }
+
+  /* Đưa nút Đăng xuất thành nút tròn nhỏ gọn ở góc */
+  #logoutBtn {
+    padding: 0.5rem;
+    font-size: 0; /* Ẩn chữ */
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+  }
+  
+  #logoutBtn i {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Chuyển các trường nhập (Ký tự, Số lượng) từ ngang sang dọc */
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .main-form {
+    padding: 1rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn {
+    padding: 1rem;
+    font-size: 1.1rem; /* Nút to hơn để dễ bấm trên điện thoại */
+  }
 }

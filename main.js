@@ -28,9 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const GROQ_API_KEY = "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";
   const GEMINI_API_KEY = "AIzaSyCOx105Evj6-RHy0iw_SmH4g880MtjyeeE";
 
-  const apiKeyInput = document.getElementById('apiKey');
-  const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
-  const aiModelSelect = document.getElementById('aiModel');
   const contentInput = document.getElementById('content');
   const requirementsInput = document.getElementById('requirements');
   const minCharLimitInput = document.getElementById('minCharLimit');
@@ -62,82 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tự động tải danh sách Model từ Groq API
-  const loadGroqModels = async (apiKey) => {
-    if (!apiKey || !aiModelSelect) return;
-    try {
-      aiModelSelect.innerHTML = '<option value="">Đang tải danh sách Model...</option>';
-      const response = await fetch('https://api.groq.com/openai/v1/models', {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        aiModelSelect.innerHTML = '';
-        
-        // Lọc bớt các model âm thanh (whisper) để lại model văn bản
-        const textModels = data.data.filter(m => !m.id.includes('whisper'));
-        textModels.sort((a, b) => a.id.localeCompare(b.id));
-
-        textModels.forEach(model => {
-          const option = document.createElement('option');
-          option.value = model.id;
-          option.textContent = model.id;
-          aiModelSelect.appendChild(option);
-        });
-
-        // Tự động chọn một model nhẹ/nhanh làm mặc định nếu có
-        const defaultModels = ['llama-3.1-8b-instant', 'llama3-8b-8192', 'gemma2-9b-it'];
-        for (const dm of defaultModels) {
-          const match = Array.from(aiModelSelect.options).find(opt => opt.value === dm);
-          if (match) {
-            match.selected = true;
-            break;
-          }
-        }
-      } else {
-        aiModelSelect.innerHTML = '<option value="">Lỗi tải Model (Key có thể sai)</option>';
-      }
-    } catch (error) {
-      aiModelSelect.innerHTML = '<option value="">Không thể tải Model</option>';
-      console.error('Failed to load models', error);
-    }
-  };
-
-  // Load API Key from localStorage hoặc từ biến cứng
-  let savedApiKey = localStorage.getItem('groqApiKey');
-  
-  if (!savedApiKey && GROQ_API_KEY && GROQ_API_KEY !== "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-    savedApiKey = GROQ_API_KEY;
-  }
-
-  if (savedApiKey) {
-    if (apiKeyInput) apiKeyInput.value = savedApiKey;
-    loadGroqModels(savedApiKey); // Tải model ngay khi trang khởi động
-  }
-
-  // Save API Key on button click
-  if (saveApiKeyBtn) {
-    saveApiKeyBtn.addEventListener('click', () => {
-      const keyToSave = apiKeyInput.value.trim();
-      if (keyToSave) {
-        localStorage.setItem('groqApiKey', keyToSave);
-        saveApiKeyBtn.textContent = 'Đã lưu!';
-        saveApiKeyBtn.style.backgroundColor = '#28a745';
-        saveApiKeyBtn.style.color = 'white';
-        
-        // Tải danh sách model ngay khi người dùng lưu key thành công
-        loadGroqModels(keyToSave);
-
-        setTimeout(() => {
-          saveApiKeyBtn.textContent = 'Lưu Key';
-          saveApiKeyBtn.style.backgroundColor = 'var(--secondary)';
-          saveApiKeyBtn.style.color = '#a32a13';
-        }, 2000);
-      } else {
-        alert('Vui lòng nhập Key trước khi lưu!');
-      }
-    });
-  }
 
   const callGroqAPI = async (prompt, apiKey, modelName, signal) => {
     const url = 'https://api.groq.com/openai/v1/chat/completions';
@@ -269,15 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateCaptions = async () => {
-    // Lấy từ UI trước, nếu trống thì lấy từ hằng số GROQ_API_KEY dự phòng
-    let apiKey = apiKeyInput ? apiKeyInput.value.trim() : "";
-    if (!apiKey || apiKey === "") {
-      apiKey = GROQ_API_KEY;
-    }
+    let apiKey = GROQ_API_KEY;
     
     if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-      alert('Vui lòng nhập Groq API Key hoặc lưu lại vào mã nguồn!');
-      apiKeyInput.focus();
+      alert('Vui lòng cung cấp Groq API Key trong mã nguồn!');
       return;
     }
 
@@ -322,17 +238,12 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
     currentAbortController = new AbortController();
 
     try {
-      const selectedModel = aiModelSelect ? aiModelSelect.value : 'llama-3.1-8b-instant';
+      // Tự động sử dụng model tối ưu của Groq
+      const selectedModel = 'llama-3.1-8b-instant';
       let generatedText = "";
       
       // 1. Thử gọi Groq trước (Nhanh nhất)
       try {
-        if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-            throw new Error('Chưa có Groq API Key');
-        }
-        if (!selectedModel) {
-            throw new Error('Chưa chọn Model Groq');
-        }
         generatedText = await callGroqAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
       } catch (groqError) {
         if (groqError.name === 'AbortError') throw groqError; // Người dùng bấm Stop

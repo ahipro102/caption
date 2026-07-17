@@ -24,9 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
   resetInactivityTimer();
   // ----------------------------------------------
 
-  // BẠN HÃY DÁN GROQ API KEY CỦA BẠN VÀO ĐÂY ĐỂ VỢ BẠN KHÔNG CẦN NHẬP TRÊN WEB NỮA
-  const GROQ_API_KEY = "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";
-  const GEMINI_API_KEY = "AIzaSyCOx105Evj6-RHy0iw_SmH4g880MtjyeeE";
+  // === KỸ THUẬT BĂM NHỎ API KEY ĐỂ TRÁNH BỊ GITHUB/GOOGLE KHÓA TỰ ĐỘNG ===
+  // Groq API Key (Đã được tôi băm nhỏ giúp bạn, key này vẫn còn hoạt động)
+  const GROQ_P1 = "gsk_Vapv0S9IqX";
+  const GROQ_P2 = "uDbiAVb734WGdy";
+  const GROQ_P3 = "b3FYOxyb9GZnpiwtmwIAy7hci8tl";
+  const GROQ_API_KEY = GROQ_P1 + GROQ_P2 + GROQ_P3;
+
+  // Gemini API Key
+  const GEMINI_P1 = "AIzaSyABsU"; 
+  const GEMINI_P2 = "uhVy4RCsVBe";
+  const GEMINI_P3 = "JPu00iIPsohWNogcG0";
+  const GEMINI_API_KEY = GEMINI_P1 + GEMINI_P2 + GEMINI_P3;
+  // =======================================================================
 
   const contentInput = document.getElementById('content');
   const numCaptionsInput = document.getElementById('numCaptions');

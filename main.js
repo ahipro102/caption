@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
   resetInactivityTimer();
   // ----------------------------------------------
 
-  // BẠN VẪN CÓ THỂ ĐIỀN API KEY CỨNG Ở ĐÂY NẾU MUỐN (Sẽ dùng làm dự phòng nếu giao diện để trống)
-  const GEMINI_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
+  // BẠN HÃY DÁN GROQ API KEY CỦA BẠN VÀO ĐÂY ĐỂ VỢ BẠN KHÔNG CẦN NHẬP TRÊN WEB NỮA
+  const GROQ_API_KEY = "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";
+  const GEMINI_API_KEY = "AIzaSyCOx105Evj6-RHy0iw_SmH4g880MtjyeeE";
 
   const apiKeyInput = document.getElementById('apiKey');
   const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
@@ -102,11 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Load API Key from localStorage
-  const savedApiKey = localStorage.getItem('groqApiKey');
+  // Load API Key from localStorage hoặc từ biến cứng
+  let savedApiKey = localStorage.getItem('groqApiKey');
+  
+  if (!savedApiKey && GROQ_API_KEY && GROQ_API_KEY !== "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+    savedApiKey = GROQ_API_KEY;
+  }
+
   if (savedApiKey) {
-    apiKeyInput.value = savedApiKey;
-    loadGroqModels(savedApiKey); // Tải model ngay khi trang khởi động nếu đã lưu key
+    if (apiKeyInput) apiKeyInput.value = savedApiKey;
+    loadGroqModels(savedApiKey); // Tải model ngay khi trang khởi động
   }
 
   // Save API Key on button click
@@ -143,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content: prompt
       }],
       temperature: 0.7,
+      max_tokens: 1024 // Giới hạn token để tiết kiệm chi phí
     };
 
     try {
@@ -158,13 +165,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Lỗi kết nối tới API');
+        throw new Error(errorData.error?.message || 'Lỗi kết nối tới Groq API');
       }
 
       const data = await response.json();
       return data.choices[0].message.content;
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Groq Error:', error);
+      throw error;
+    }
+  };
+
+  const callGeminiAPI = async (prompt, apiKey, signal) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    
+    const requestBody = {
+      contents: [{
+        parts: [{ text: prompt }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024 // Giới hạn token để tiết kiệm chi phí
+      }
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody),
+        signal: signal
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Lỗi kết nối tới Gemini API');
+      }
+
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+      console.error('Gemini Error:', error);
       throw error;
     }
   };
@@ -226,10 +269,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateCaptions = async () => {
-    // Lấy từ UI trước, nếu trống thì lấy từ hằng số GEMINI_API_KEY dự phòng
-    let apiKey = apiKeyInput.value.trim();
+    // Lấy từ UI trước, nếu trống thì lấy từ hằng số GROQ_API_KEY dự phòng
+    let apiKey = apiKeyInput ? apiKeyInput.value.trim() : "";
     if (!apiKey || apiKey === "") {
-      apiKey = GEMINI_API_KEY;
+      apiKey = GROQ_API_KEY;
     }
     
     if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
@@ -280,13 +323,28 @@ Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 
 
     try {
       const selectedModel = aiModelSelect ? aiModelSelect.value : 'llama-3.1-8b-instant';
+      let generatedText = "";
       
-      if (!selectedModel) {
-        alert('Danh sách Model chưa được tải hoặc không hợp lệ. Vui lòng kiểm tra lại API Key!');
-        throw new Error('Chưa chọn Model');
+      // 1. Thử gọi Groq trước (Nhanh nhất)
+      try {
+        if (!apiKey || apiKey === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+            throw new Error('Chưa có Groq API Key');
+        }
+        if (!selectedModel) {
+            throw new Error('Chưa chọn Model Groq');
+        }
+        generatedText = await callGroqAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
+      } catch (groqError) {
+        if (groqError.name === 'AbortError') throw groqError; // Người dùng bấm Stop
+        
+        console.warn('Groq thất bại, chuyển sang gọi Gemini...', groqError);
+        // 2. Chuyển sang gọi Gemini (Dự phòng)
+        if (!GEMINI_API_KEY || GEMINI_API_KEY === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+          throw new Error('Groq lỗi và chưa cấu hình Gemini API Key dự phòng.');
+        }
+        generatedText = await callGeminiAPI(prompt, GEMINI_API_KEY, currentAbortController.signal);
       }
 
-      const generatedText = await callGroqAPI(prompt, apiKey, selectedModel, currentAbortController.signal);
       const captions = parseCaptions(generatedText, parseInt(numCaptions, 10));
       
       captions.forEach((cap, index) => {

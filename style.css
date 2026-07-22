@@ -40,7 +40,7 @@ body::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(4px); /* Tăng giảm con số này để chỉnh độ mờ (ví dụ: 12px sẽ mờ hơn) */
+  filter: blur(2px); /* Giảm độ mờ để ảnh nền hiển thị rõ nét hơn */
   transform: scale(1.05); /* Phóng to nhẹ 5% để che phần viền trắng bị lẹm do hiệu ứng mờ */
 }
 

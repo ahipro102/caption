@@ -158,8 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       cleanedCap = cleanedCap.trim();
       
-      // Sau đó mới nối đúng một hashtag duy nhất của chúng ta vào cuối
-      return cleanedCap + '\n\n#MamNonAqua';
+      // Trả về bài viết nguyên bản sạch sẻ, không có bất kỳ hashtag nào
+      return cleanedCap;
     }).slice(0, expectedCount);
   };
 
@@ -220,15 +220,15 @@ YÊU CẦU BẮT BUỘC: Hãy viết CHÍNH XÁC ${numCaptions} mẫu caption Fa
 
 YÊU CẦU QUAN TRỌNG VỀ GIỌNG VĂN:
 - Tự nhiên, gần gũi, dạt dào cảm xúc như một lời tâm tình của cô giáo mầm non. Đọc vào là thấy rung động và yêu thương.
-- TUYỆT ĐỐI KHÔNG nhắc đến tên trường (không được viết cụm từ "Trường Mầm non Aqua" hay "Aqua" vào trong câu văn), vì tên trường đã nằm sẵn trong hashtag ở cuối bài rồi. Việc lặp lại tên trường sẽ làm câu văn mất đi sự tự nhiên và sặc mùi quảng cáo.
+- TUYỆT ĐỐI KHÔNG nhắc đến tên trường (không được viết cụm từ "Trường Mầm non Aqua" hay "Aqua" vào trong câu văn).
 - Hình thức: Chèn các emoji sinh động, khéo léo, đúng chỗ. 
 - KẾT QUẢ ĐẦU RA TUYỆT ĐỐI PHẢI DÀI TỪ ${minCharLimit} ĐẾN TỐI ĐA ${charLimit} KÝ TỰ cho MỖI caption. Bạn phải ngầm tự đếm số lượng ký tự trước, nhưng TUYỆT ĐỐI KHÔNG in số ký tự đó ra kết quả (ví dụ: cấm in "(396 ký tự)").
-- BẮT BUỘC: CHỈ ĐƯỢC PHÉP dùng duy nhất MỘT hashtag là #MamNonAqua ở cuối mỗi caption. TUYỆT ĐỐI KHÔNG thêm hashtag nào khác.
+- BẮT BUỘC: TUYỆT ĐỐI KHÔNG THÊM BẤT KỲ HASHTAG NÀO (#) vào kết quả bài viết.
 
 Dưới đây là các văn phong mẫu CHUẨN MỰC để bạn bắt chước 100% cái hồn (đây là ví dụ bé tập câu cá, hãy áp dụng giọng văn này cho nội dung hiện tại):
-Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí say sưa trổ tài câu cá! Qua trò chơi này, các con không chỉ rèn luyện sự khéo léo, kiên nhẫn mà còn học được cách tập trung cao độ. Yêu lắm những đôi tay nhỏ xíu này! ❤️🐟 #MamNonAqua
-Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Đây luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸 #MamNonAqua
-Mẫu 3: 🌊 Giờ chơi mà học: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨ #MamNonAqua
+Mẫu 1: 🎣 Ngắm nhìn những "cần thủ" nhí say sưa trổ tài câu cá! Qua trò chơi này, các con không chỉ rèn luyện sự khéo léo, kiên nhẫn mà còn học được cách tập trung cao độ. Yêu lắm những đôi tay nhỏ xíu này! ❤️🐟
+Mẫu 2: 🐠 Hôm nay lớp chúng mình đi câu cá nhé! Nhìn các con hào hứng reo hò khi "tóm" được chú cá nhỏ, cô thấy niềm vui như lan tỏa khắp phòng. Đây luôn là nơi lưu giữ những khoảnh khắc tuổi thơ ngọt ngào nhất của các con. 🏫🧸
+Mẫu 3: 🌊 Giờ chơi mà học: Bé tập câu cá! Trò chơi giúp con nhận biết màu sắc và phát triển vận động tinh cực tốt. Từng chú cá sắc màu được đưa lên bờ trong niềm hạnh phúc của cả cô và trò. 🎨✨
 
 Hãy trả về kết quả dưới dạng danh sách được đánh số (1., 2., 3.). TUYỆT ĐỐI KHÔNG có câu mở đầu (như "Dưới đây là..."), KHÔNG giải thích, KHÔNG bình luận. BẮT ĐẦU NGAY LẬP TỨC bằng "1. ".`;
 

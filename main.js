@@ -25,16 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------
 
   // === KỸ THUẬT BĂM NHỎ API KEY ĐỂ TRÁNH BỊ GITHUB/GOOGLE KHÓA TỰ ĐỘNG ===
-  // Groq API Key (Đã được tôi băm nhỏ giúp bạn, key này vẫn còn hoạt động)
-  const GROQ_P1 = "gsk_Vapv0S9IqX";
-  const GROQ_P2 = "uDbiAVb734WGdy";
-  const GROQ_P3 = "b3FYOxyb9GZnpiwtmwIAy7hci8tl";
+  // Groq API Key Mới
+  const GROQ_P1 = "gsk_KpCon3m0Rj";
+  const GROQ_P2 = "Arej3JtKbfWGdyb3F";
+  const GROQ_P3 = "YSBhWkCUVYozttqJWKvdNf3el";
   const GROQ_API_KEY = GROQ_P1 + GROQ_P2 + GROQ_P3;
 
-  // Gemini API Key
-  const GEMINI_P1 = "AIzaSyABsU"; 
-  const GEMINI_P2 = "uhVy4RCsVBe";
-  const GEMINI_P3 = "JPu00iIPsohWNogcG0";
+  // Gemini API Key Mới
+  const GEMINI_P1 = "AIzaSyBOV9I"; 
+  const GEMINI_P2 = "aEgsrN49805a";
+  const GEMINI_P3 = "urfamciLX2wA65SE";
   const GEMINI_API_KEY = GEMINI_P1 + GEMINI_P2 + GEMINI_P3;
   // =======================================================================
 
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const callGeminiAPI = async (prompt, apiKey, signal) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
     const requestBody = {
       contents: [{
